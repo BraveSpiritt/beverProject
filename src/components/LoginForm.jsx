@@ -1,10 +1,10 @@
-// src/components/LoginForm.jsx
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { TextField, Button, Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { fetchUsers } from '../hooks/useUsers';
 import { useQuery } from '@tanstack/react-query';
+import UserContext from '../context/UserContext';
 
 
 const LoginForm = () => {
@@ -15,16 +15,24 @@ const LoginForm = () => {
     queryFn: fetchUsers,
   });
   const navigate = useNavigate();
+  const { userState, setUserState } = useContext(UserContext)
+
 
   const onSubmit = (data, e) => {
-    console.log(users);
     e.preventDefault();
-    if (users && users.value.some(user => user.Name === data.username && user.Password === data.password)) {
+    const foundUser = users.value.find(user =>
+      user.Name === data.username && user.Password === data.password)
+    if (foundUser) {
+      setUserState(prevState => ({
+        ...prevState,
+        userId: foundUser.UserId,
+      }));
       navigate('/next-page');
-    } else {
-      setErrorMessage('Invalid username or password');
     }
-  };
+    else {
+      setErrorMessage('Invalid username or password');
+    };
+  }
 
   if (isLoading) return <Typography>Loading...</Typography>;
   if (error) return <Typography>Error fetching users</Typography>;
@@ -59,7 +67,7 @@ const LoginForm = () => {
       <TextField
         {...register('password', { required: 'Password is required' })}
         label="Password"
-        type="text"
+        type="password"
         variant="outlined"
         fullWidth
         error={!!errors.password}

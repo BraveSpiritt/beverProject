@@ -2,7 +2,9 @@ import React from 'react';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
-import NextPage from './pages/NextPage';
+import ProductPage from './pages/ProductPage';
+import { UserProvider } from './context/UserContext';
+
 
 const theme = createTheme({
   palette: {
@@ -17,15 +19,17 @@ const theme = createTheme({
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <Routes>
-          <Route path="/" element={<HomePage />} /> 
-          <Route path="/next-page" element={<NextPage />} />
-        </Routes>
-      </Router>
-    </ThemeProvider>
+    <UserProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/next-page" element={<ProductPage />} />
+          </Routes>
+        </Router>
+      </ThemeProvider>
+    </UserProvider>
   );
 }
 

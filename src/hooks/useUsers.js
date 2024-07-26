@@ -1,5 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
-
 export const fetchUsers = async () => {
   const response = await fetch('https://bever-aca-assignment.azurewebsites.net/users');
   if (!response.ok) {
